@@ -196,6 +196,7 @@
 					tippySingleton.setInstances(tippyInstances);
 				} else {
 					tippySingleton = createSingleton(tippyInstances, {
+						overrides     : [],
 						moveTransition: 'transform 0.1s ease-out',
 						allowHTML     : true
 					});
@@ -206,7 +207,7 @@
 				if (props.tooltip) {
 					if (day.count !== undefined) {
 						if (props.tooltipFormatter) {
-							return props.tooltipFormatter(day, props.tooltipUnit);
+							return props.tooltipFormatter(day, props.tooltipUnit!);
 						}
 						return `<b>${day.count} ${props.tooltipUnit}</b> ${lo.value.on} ${lo.value.months[ day.date.getMonth() ]} ${day.date.getDate()}, ${day.date.getFullYear()}`;
 					} else if (props.noDataText) {

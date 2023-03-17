@@ -17,7 +17,6 @@
 
 <script lang="ts">
 	import { defineComponent, PropType, ref, toRef } from 'vue';
-	import { useDarkMode } from '@vuepress/theme-default/lib/client';
 	import { data } from '@/data';
 
 	export default defineComponent({
@@ -29,15 +28,15 @@
 				default: 'horizontal'
 			},
 			withSlider  : Boolean,
-			darkMode    :Boolean,
+			darkMode    : Boolean,
 			rangeColor  : {
 				type: Array as PropType<string[]>
 			}
 		},
 		setup(props) {
 
-			const round      = ref(  props.initialRound !== undefined ? props.initialRound : 2),
-				  isDarkMode = props.darkMode ? toRef(props, 'darkMode') : useDarkMode();
+			const round      = ref(props.initialRound !== undefined ? props.initialRound : 2),
+				  isDarkMode = props.darkMode ? toRef(props, 'darkMode') : false;
 
 			return {
 				data, round, isDarkMode,

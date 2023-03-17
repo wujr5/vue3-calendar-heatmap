@@ -109,7 +109,7 @@ export class Heatmap {
 				this._calendar[ i ] = new Array(Heatmap.DAYS_IN_WEEK);
 				for (let j = 0; j < Heatmap.DAYS_IN_WEEK; j++) {
 					const dayValues          = this.activities.get(this.keyDayParser(date));
-					this._calendar[ i ][ j ] = {
+					this._calendar![ i ][ j ] = {
 						date      : new Date(date.valueOf()),
 						count     : dayValues ? dayValues.count : undefined,
 						colorIndex: dayValues ? dayValues.colorIndex : 0

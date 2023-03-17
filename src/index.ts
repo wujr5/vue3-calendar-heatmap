@@ -2,7 +2,7 @@ import { App } from 'vue';
 import CalendarHeatmap from '@/components/CalendarHeatmap.vue';
 
 function install(Vue: App) {
-	Vue.component(CalendarHeatmap.name, CalendarHeatmap);
+	Vue.component(CalendarHeatmap.name!, CalendarHeatmap);
 }
 
 export default { install };

@@ -1,17 +1,18 @@
 import type { DefaultThemeOptions } from 'vuepress';
-import { defineUserConfig } from 'vuepress';
+import { defaultTheme, defineUserConfig, viteBundler } from 'vuepress';
 import path from 'path';
 import { navbar, sidebar } from './configs';
+import PluginRegisterComponents from '@vuepress/plugin-register-components';
+import PluginShiki from '@vuepress/plugin-shiki';
 
 const isPublish = process.env.IS_PUBLISH === 'yes';
 
 export default defineUserConfig<DefaultThemeOptions>({
-	lang         : 'en-US',
-	title        : 'Calendar Heatmap',
-	description  : 'Simple Heatmap Component for Vue 3',
-	base         : isPublish ? '/vue3-calendar-heatmap/' : '/',
-	bundler      : '@vuepress/vite',
-	bundlerConfig: {
+	lang       : 'en-US',
+	title      : 'Calendar Heatmap',
+	description: 'Simple Heatmap Component for Vue 3',
+	base       : isPublish ? '/vue3-calendar-heatmap/' : '/',
+	bundler    : viteBundler({
 		viteOptions: {
 			resolve: {
 				alias: [
@@ -20,14 +21,16 @@ export default defineUserConfig<DefaultThemeOptions>({
 						replacement: path.resolve(__dirname, '../../src')
 					}
 				]
-			}
+			},
 		}
-	},
-	themeConfig  : {
-		logo        : 'https://vuejs.org/images/logo.png',
-		repo        : 'razorness/vue3-calendar-heatmap',
-		docsDir     : 'docs',
-		locales     : {
+	}),
+	theme      : defaultTheme({
+		colorMode      : 'light',
+		colorModeSwitch: false,
+		logo           : 'https://vuejs.org/images/logo.png',
+		repo           : 'razorness/vue3-calendar-heatmap',
+		docsDir        : 'docs',
+		locales        : {
 			/**
 			 * English locale config
 			 *
@@ -45,27 +48,23 @@ export default defineUserConfig<DefaultThemeOptions>({
 				editLinkText: 'Edit this page on GitHub'
 			}
 		},
-		themePlugins: {
+		themePlugins   : {
 			// only enable git plugin in production mode
 			git: true,
 			// use shiki plugin in production mode instead
 			prismjs: false
 		}
-	},
-	plugins      : [
-		[
-			'@vuepress/plugin-register-components',
-			{
-				componentsDir: path.resolve(__dirname, './components'),
-				components   : {
-					CalendarHeatmap: path.resolve(__dirname, '../../src/components/CalendarHeatmap.vue')
-				}
+	}),
+	plugins    : [
+		PluginRegisterComponents({
+			componentsDir: path.resolve(__dirname, './components'),
+			components   : {
+				CalendarHeatmap: path.resolve(__dirname, '../../src/components/CalendarHeatmap.vue')
 			}
-		],
-		[
-			'@vuepress/plugin-shiki',
-			{ theme: 'dark-plus' }
-		]
+		}),
+		PluginShiki({
+			theme: 'dark-plus'
+		})
 	]
 });
 
