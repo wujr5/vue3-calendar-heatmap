@@ -55,7 +55,7 @@
 				</text>
 			</g>
 
-			<g class="vch__year__wrapper" :transform="yearWrapperTransform">
+			<g class="vch__year__wrapper" :transform="yearWrapperTransform" @mouseover="initTippyLazy">
 				<g class="vch__month__wrapper"
 				   v-for="(week, weekIndex) in heatmap.calendar"
 				   :key="weekIndex"
@@ -70,7 +70,8 @@
 							  :width="SQUARE_SIZE - SQUARE_BORDER_SIZE"
 							  :height="SQUARE_SIZE - SQUARE_BORDER_SIZE"
 							  :style="{ fill: curRangeColor[day.colorIndex] }"
-							  :data-tippy-content="tooltipOptions(day)"
+							  :data-week-index="weekIndex"
+							  :data-day-index="dayIndex"
 							  @click="$emit('dayClick', day)"
 						/>
 					</template>
@@ -187,7 +188,7 @@
 
 			const { values, tooltipUnit, tooltipFormatter, noDataText, max, vertical, locale } = toRefs(props);
 
-			let tippyInstances: Instance[],
+			let tippyInstances: Instance[] = [],
 				tippySingleton: CreateSingletonInstance;
 
 			function initTippy() {
@@ -283,11 +284,33 @@
 				tippyInstances?.map(i => i.destroy());
 			});
 
+			function initTippyLazy(e: MouseEvent) {
+				if (tippySingleton
+					&& (e.target as HTMLElement).classList.contains('vch__day__square')
+					&& (e.target as HTMLElement).dataset.tippyContent === undefined
+					&& (e.target as HTMLElement).dataset.weekIndex !== undefined
+					&& (e.target as HTMLElement).dataset.dayIndex !== undefined
+				) {
+					const weekIndex = Number((e.target as HTMLElement).dataset.weekIndex),
+						  dayIndex  = Number((e.target as HTMLElement).dataset.dayIndex);
+
+					if (!isNaN(weekIndex) && !isNaN(dayIndex)) {
+						const tooltip = tooltipOptions(heatmap.value.calendar[ weekIndex ][ dayIndex ]);
+						if (tooltip) {
+							(e.target as HTMLElement).dataset.tippyContent = tooltip;
+							tippyInstances.push(tippy(e.target));
+							tippySingleton.setInstances(tippyInstances);
+							console.log('onMouseover', weekIndex, dayIndex);
+						}
+					}
+				}
+			}
+
 			return {
 				SQUARE_BORDER_SIZE, SQUARE_SIZE, LEFT_SECTION_WIDTH, RIGHT_SECTION_WIDTH, TOP_SECTION_HEIGHT, BOTTOM_SECTION_HEIGHT,
 				svg, heatmap, now, width, height, viewbox, daysLabelWrapperTransform, monthsLabelWrapperTransform, yearWrapperTransform, legendWrapperTransform,
 				lo, legendViewbox, curRangeColor: rangeColor,
-				tooltipOptions, getWeekPosition, getDayPosition, getMonthLabelPosition
+				getWeekPosition, getDayPosition, getMonthLabelPosition, initTippyLazy
 			};
 		}
 	});
