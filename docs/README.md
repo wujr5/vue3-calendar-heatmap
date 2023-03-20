@@ -24,7 +24,7 @@ yarn add vue3-calendar-heatmap tippy.js
 
 ```bash:no-line-numbers
 # install in your project
-npm install -D vue3-calendar-heatmap
+npm install -D vue3-calendar-heatmap tippy.js
 ```
 
   </CodeGroupItem>
