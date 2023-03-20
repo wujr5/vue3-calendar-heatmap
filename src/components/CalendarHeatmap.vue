@@ -193,7 +193,6 @@
 
 
 			function initTippy() {
-				console.log('initTippy');
 				tippyInstances.clear();
 				if (tippySingleton) {
 					tippySingleton.setInstances(Array.from(tippyInstances.values()));
