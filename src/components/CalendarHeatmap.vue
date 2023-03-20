@@ -287,6 +287,7 @@
 			function initTippyLazy(e: MouseEvent) {
 
 				if (tippySingleton
+					&& e.target
 					&& (e.target as HTMLElement).classList.contains('vch__day__square')
 					&& (e.target as HTMLElement).dataset.weekIndex !== undefined
 					&& (e.target as HTMLElement).dataset.dayIndex !== undefined
@@ -304,7 +305,7 @@
 
 							if ((e.target as HTMLElement).dataset.tippyInitialized !== 'true') {
 								(e.target as HTMLElement).dataset.tippyInitialized = 'true';
-								tippyInstances.push(tippy(e.target));
+								tippyInstances.push(tippy(e.target as HTMLElement));
 								tippySingleton.setInstances(tippyInstances);
 							}
 
