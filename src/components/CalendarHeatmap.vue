@@ -189,10 +189,17 @@
 			const { values, tooltipUnit, tooltipFormatter, noDataText, max, vertical, locale } = toRefs(props);
 
 			let tippyInstances: Instance[] = [],
+				tippyInstanceElements      = new Set<HTMLElement>(),
 				tippySingleton: CreateSingletonInstance;
 
+
 			function initTippy() {
-				tippyInstances = tippy(Array.from(svg.value!.querySelectorAll('.vch__day__square[data-tippy-content]')));
+				tippyInstanceElements = new Set<HTMLElement>();
+				const instances       = Array.from(svg.value!.querySelectorAll('.vch__day__square[data-tippy-content]'));
+				for (let i = 0, len = instances.length; i < len; i++) {
+					tippyInstanceElements.add(instances[ i ]);
+				}
+				tippyInstances = tippy(instances);
 				if (tippySingleton) {
 					tippySingleton.setInstances(tippyInstances);
 				} else {
@@ -303,8 +310,8 @@
 
 							(e.target as HTMLElement).dataset.tippyContent = tooltip;
 
-							if ((e.target as HTMLElement).dataset.tippyInitialized !== 'true') {
-								(e.target as HTMLElement).dataset.tippyInitialized = 'true';
+							if (!tippyInstanceElements.has(e.target as HTMLElement)) {
+								tippyInstanceElements.add(e.target as HTMLElement);
 								tippyInstances.push(tippy(e.target as HTMLElement));
 								tippySingleton.setInstances(tippyInstances);
 							}
