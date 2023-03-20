@@ -285,25 +285,34 @@
 			});
 
 			function initTippyLazy(e: MouseEvent) {
+
 				if (tippySingleton
 					&& (e.target as HTMLElement).classList.contains('vch__day__square')
-					&& (e.target as HTMLElement).dataset.tippyContent === undefined
 					&& (e.target as HTMLElement).dataset.weekIndex !== undefined
 					&& (e.target as HTMLElement).dataset.dayIndex !== undefined
 				) {
+
 					const weekIndex = Number((e.target as HTMLElement).dataset.weekIndex),
 						  dayIndex  = Number((e.target as HTMLElement).dataset.dayIndex);
 
 					if (!isNaN(weekIndex) && !isNaN(dayIndex)) {
+
 						const tooltip = tooltipOptions(heatmap.value.calendar[ weekIndex ][ dayIndex ]);
 						if (tooltip) {
+
 							(e.target as HTMLElement).dataset.tippyContent = tooltip;
-							tippyInstances.push(tippy(e.target));
-							tippySingleton.setInstances(tippyInstances);
-							console.log('onMouseover', weekIndex, dayIndex);
+
+							if ((e.target as HTMLElement).dataset.tippyInitialized !== 'true') {
+								(e.target as HTMLElement).dataset.tippyInitialized = 'true';
+								tippyInstances.push(tippy(e.target));
+								tippySingleton.setInstances(tippyInstances);
+							}
+
 						}
 					}
+
 				}
+
 			}
 
 			return {
