@@ -15,7 +15,7 @@ A lightweight calendar heatmap Vuejs component built on SVG, inspired by github'
 
 ```bash:no-line-numbers
 # install in your project
-yarn add vue3-calendar-heatmap
+yarn add vue3-calendar-heatmap tippy.js
 ```
 
   </CodeGroupItem>

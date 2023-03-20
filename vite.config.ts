@@ -13,21 +13,24 @@ export default defineConfig({
 			}
 		]
 	},
-	plugins: [ vue(), dts() ],
+	plugins: [ vue(), dts({ insertTypesEntry: true }) ],
 	build  : {
+		sourcemap    : true,
 		lib          : {
-			entry: path.resolve(__dirname, 'src/index.ts'),
-			name : 'CalendarHeatmap'
+			entry   : path.resolve(__dirname, 'src/index.ts'),
+			name    : 'CalendarHeatmap',
+			fileName: format => `vue3-calendar-heatmap.${format}.js`
 		},
 		rollupOptions: {
 			// make sure to externalize deps that shouldn't be bundled
 			// into your library
-			external: [ 'vue' ],
+			external: [ 'vue', 'tippy.js' ],
 			output  : {
 				// Provide global variables to use in the UMD build
 				// for externalized deps
 				globals: {
-					vue: 'Vue'
+					vue       : 'Vue',
+					'tippy.js': 'tippy'
 				}
 			}
 		}
