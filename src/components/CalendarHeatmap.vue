@@ -186,24 +186,19 @@
 				  lo                          = ref<Locale>({} as any),
 				  rangeColor                  = ref<string[]>(props.rangeColor || (props.darkMode ? Heatmap.DEFAULT_RANGE_COLOR_DARK : Heatmap.DEFAULT_RANGE_COLOR_LIGHT));
 
-			const { values, tooltipUnit, tooltipFormatter, noDataText, max, vertical, locale } = toRefs(props);
+			const { values, tooltipUnit, tooltipFormatter, noDataText, max, vertical, locale } = toRefs(props),
+				  tippyInstances                                                               = new Map<HTMLElement, Instance>();
 
-			let tippyInstances: Instance[] = [],
-				tippyInstanceElements      = new Set<HTMLElement>(),
-				tippySingleton: CreateSingletonInstance;
+			let tippySingleton: CreateSingletonInstance;
 
 
 			function initTippy() {
-				tippyInstanceElements = new Set<HTMLElement>();
-				const instances       = Array.from(svg.value!.querySelectorAll('.vch__day__square[data-tippy-content]'));
-				for (let i = 0, len = instances.length; i < len; i++) {
-					tippyInstanceElements.add(instances[ i ] as HTMLElement);
-				}
-				tippyInstances = tippy(instances);
+				console.log('initTippy');
+				tippyInstances.clear();
 				if (tippySingleton) {
-					tippySingleton.setInstances(tippyInstances);
+					tippySingleton.setInstances(Array.from(tippyInstances.values()));
 				} else {
-					tippySingleton = createSingleton(tippyInstances, {
+					tippySingleton = createSingleton(Array.from(tippyInstances.values()), {
 						overrides     : [],
 						moveTransition: 'transform 0.1s ease-out',
 						allowHTML     : true
@@ -280,7 +275,7 @@
 				[ values, tooltipUnit, tooltipFormatter, noDataText, max, rangeColor ],
 				() => {
 					heatmap.value = new Heatmap(props.endDate as Date, props.values, props.max);
-					tippyInstances?.map(i => i.destroy());
+					tippyInstances.forEach((item) => item.destroy());
 					nextTick(initTippy);
 				}
 			);
@@ -288,7 +283,7 @@
 			onMounted(initTippy);
 			onBeforeUnmount(() => {
 				tippySingleton?.destroy();
-				tippyInstances?.map(i => i.destroy());
+				tippyInstances.forEach((item) => item.destroy());
 			});
 
 			function initTippyLazy(e: MouseEvent) {
@@ -308,12 +303,13 @@
 						const tooltip = tooltipOptions(heatmap.value.calendar[ weekIndex ][ dayIndex ]);
 						if (tooltip) {
 
-							(e.target as HTMLElement).dataset.tippyContent = tooltip;
+							const instance = tippyInstances.get(e.target as HTMLElement);
 
-							if (!tippyInstanceElements.has(e.target as HTMLElement)) {
-								tippyInstanceElements.add(e.target as HTMLElement);
-								tippyInstances.push(tippy(e.target as HTMLElement));
-								tippySingleton.setInstances(tippyInstances);
+							if (instance) {
+								instance.setContent(tooltip);
+							} else if (!instance) {
+								tippyInstances.set(e.target as HTMLElement, tippy(e.target as HTMLElement, { content: tooltip } as any));
+								tippySingleton.setInstances(Array.from(tippyInstances.values()));
 							}
 
 						}
