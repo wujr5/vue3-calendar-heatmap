@@ -197,7 +197,7 @@
 				tippyInstanceElements = new Set<HTMLElement>();
 				const instances       = Array.from(svg.value!.querySelectorAll('.vch__day__square[data-tippy-content]'));
 				for (let i = 0, len = instances.length; i < len; i++) {
-					tippyInstanceElements.add(instances[ i ]);
+					tippyInstanceElements.add(instances[ i ] as HTMLElement);
 				}
 				tippyInstances = tippy(instances);
 				if (tippySingleton) {
