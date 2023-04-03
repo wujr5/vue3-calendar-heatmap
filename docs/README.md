@@ -36,6 +36,7 @@ npm install -D vue3-calendar-heatmap tippy.js
 
 ```typescript:no-line-numbers
 import VueCalendarHeatmap from 'vue3-calendar-heatmap'
+import 'vue3-calendar-heatmap/dist/style.css';
 
 app.use(VueCalendarHeatmap)
 ```
@@ -44,6 +45,7 @@ app.use(VueCalendarHeatmap)
 
 ```typescript:no-line-numbers
 import { CalendarHeatmap } from 'vue3-calendar-heatmap'
+import 'vue3-calendar-heatmap/dist/style.css';
 
 app.component('CalendarHeatmap', CalendarHeatmap)
 ```
@@ -52,6 +54,7 @@ app.component('CalendarHeatmap', CalendarHeatmap)
 
 ```typescript:no-line-numbers
 import { CalendarHeatmap } from 'vue3-calendar-heatmap'
+import 'vue3-calendar-heatmap/dist/style.css';
 
 export default {
     components: {
